@@ -1,0 +1,11 @@
+<h1>Wellcome EJS</h1>
+
+<%=data%>
+
+<%- include("./test/test2")%>
+
+<% for ( let i = 0; i <= 10; i++) {%>
+    <% if(i == 5) {%>
+    <h3><%=i%></h3>
+<%} else {%> <h4><%=i%></h4>
+<%}}%>

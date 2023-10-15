@@ -1,3 +1,4 @@
+const UserModel = require("../models/user");
 
 var status = false;
 
@@ -5,11 +6,13 @@ const getLogin = (req, res) =>{
     res.render("./admin/login",{status});
 }
 
-const postLogin = (req, res) => {
-    let emailCheck = "vietpro.edu.vn@gmail.com";
-    let passCheck = "123456";
+const postLogin = async (req, res) => {
+
     let {email, password} = req.body;
-    if(emailCheck == email && passCheck == password) {
+
+    const users = await UserModel.find({email : email , password : password});
+
+    if(users.length != 0) {
         status = false;
         res.redirect("/admin/dashboard");
     } else {

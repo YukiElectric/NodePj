@@ -6,15 +6,28 @@ const CategoryModel = require("../models/category");
 //     // res.redirect("/test");
 // }
 
-let test = (req, res) => {
+let test = async (req, res) => {
     // const product = ProductModel.find({},(err, docs) => {
     //     console.log(docs);
     // });
     
 
-    ProductModel.find().populate({path: "cat_id"}).exec((err,docs) => {
-        console.log(docs);
-    })
+    // ProductModel.find().populate({path: "cat_id"}).exec((err,docs) => {
+    //     console.log(docs);
+    // })
+
+    // const a = 10;
+    // const promise = new Promise((res, rej) => {
+    //     setTimeout(() => {
+    //         res(80);
+    //     })
+    // });
+    // promise.then((data) => {
+    //     console.log(a + data);
+    // })
+
+    const data = await ProductModel.find();
+    console.log(data);
 }
 
 const testForm = (req, res) => {

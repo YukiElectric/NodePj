@@ -23,7 +23,7 @@ router.get("/admin/logout", authController.logout);
 
 router.get("/admin/dashboard", adminCotroller.index);
 
-router.get("/admin/product", productController.index);
+router.get("/admin/products", productController.index);
 
 router.get("/admin/product/create", productController.create);
 

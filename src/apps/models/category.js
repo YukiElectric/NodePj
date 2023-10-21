@@ -2,7 +2,7 @@ const { model } = require("mongoose");
 
 const mongoose = require("../../common/database")();
 const categorySchema = new mongoose.Schema({
-    tittle : {
+    title : {
         type: String,
         required : true
     },

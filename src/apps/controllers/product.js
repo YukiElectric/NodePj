@@ -1,13 +1,22 @@
-const index = (req, res) => {
-    res.send("index");
+const ProductModel = require("../models/product");
+const CategoryModel = require("../models/category");
+
+const index = async (req, res) => {
+    const product = await ProductModel.find({}).populate({path : "cat_id"});
+    const products = product.map((item) => {
+        item.price = eval(item.price).toLocaleString('vn-VN');
+        console.log(item.price);
+        return item;
+    })
+    res.render("admin/products/product", {products});
 }
 
 const create = (req, res) => {
-    res.send("create");
+    res.render("admin/products/add_product");
 }
 
 const edit = (req, res) => {
-    res.send("edit");
+    res.render("admin/products/edit_product");
 }
 
 const del = (req, res) => {

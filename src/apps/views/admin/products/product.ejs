@@ -1,6 +1,6 @@
 <%- include("../layout/head", {title : "Product"}) %>
 <%- include("../layout/header") %>
-<%- include("../layout/sidebar") %>
+<%- include("../layout/sidebar", {active : "Product"}) %>
 
 <div class="col-sm-9 col-sm-offset-3 col-lg-10 col-lg-offset-2 main">			
 		<div class="row">
@@ -16,7 +16,7 @@
 			</div>
 		</div><!--/.row-->
 		<div id="toolbar" class="btn-group">
-            <a href="product-add.html" class="btn btn-success">
+            <a href="/admin/product/create" class="btn btn-success">
                 <i class="glyphicon glyphicon-plus"></i> Thêm sản phẩm
             </a>
         </div>
@@ -51,35 +51,17 @@
                                         </span></td>
                                         <td><%= product.cat_id.title %></td>
                                         <td class="form-group">
-                                            <a href="product-edit.html" class="btn btn-primary"><i class="glyphicon glyphicon-pencil"></i></a>
-                                            <a href="product-edit.html" class="btn btn-danger"><i class="glyphicon glyphicon-remove"></i></a>
+                                            <a href="/admin/product/edit/5" class="btn btn-primary"><i class="glyphicon glyphicon-pencil"></i></a>
+                                            <a href="/admin/product/delete/5" class="btn btn-danger"><i class="glyphicon glyphicon-remove"></i></a>
                                         </td>
                                     </tr>
-                                    <!-- <tr>
-                                            <td style="">1</td>
-                                            <td style="">Sản phẩm số 2</td>
-                                            <td style="">18.500.000 vnd</td>
-                                            <td style="text-align: center"><img width="130" height="180" src="img/download.jpeg" /></td>
-                                            <td><span class="label label-danger">Hết hàng</span></td>
-                                            <td>Danh mục số 1</td>
-                                            <td class="form-group">
-                                                <a href="product-edit.html" class="btn btn-primary"><i class="glyphicon glyphicon-pencil"></i></a>
-                                                <a href="product-edit.html" class="btn btn-danger"><i class="glyphicon glyphicon-remove"></i></a>
-                                            </td>
-                                        </tr> -->
                                         <%} %>
                                  </tbody>
 						</table>
                     </div>
                     <div class="panel-footer">
                         <nav aria-label="Page navigation example">
-                            <ul class="pagination">
-                                <li class="page-item"><a class="page-link" href="#">&laquo;</a></li>
-                                <li class="page-item"><a class="page-link" href="#">1</a></li>
-                                <li class="page-item"><a class="page-link" href="#">2</a></li>
-                                <li class="page-item"><a class="page-link" href="#">3</a></li>
-                                <li class="page-item"><a class="page-link" href="#">&raquo;</a></li>
-                            </ul>
+                            <%- include("../layout/pagination") %>
                         </nav>
                     </div>
 				</div>

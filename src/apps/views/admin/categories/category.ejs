@@ -5,7 +5,7 @@
 <div class="col-sm-9 col-sm-offset-3 col-lg-10 col-lg-offset-2 main">			
 		<div class="row">
 			<ol class="breadcrumb">
-				<li><a href="#"><svg class="glyph stroked home"><use xlink:href="#stroked-home"></use></svg></a></li>
+				<li><a href="/admin/dashboard"><svg class="glyph stroked home"><use xlink:href="#stroked-home"></use></svg></a></li>
 				<li class="active">Quản lý danh mục</li>
 			</ol>
 		</div><!--/.row-->
@@ -16,7 +16,7 @@
 			</div>
 		</div><!--/.row-->
 		<div id="toolbar" class="btn-group">
-            <a href="category-add.html" class="btn btn-success">
+            <a href="/admin/categories/create" class="btn btn-success">
                 <i class="glyphicon glyphicon-plus"></i> Thêm danh mục
             </a>
         </div>
@@ -36,33 +36,37 @@
 									</tr>
 									</thead>
 									<tbody>
+										<% let i=0; for(let category of categories) {%>
 										<tr>
-											<td style="">1</td>
-											<td style="">Danh mục 1</td>
+											<td style=""><%= ++i %></td>
+											<td style=""><%= category.title %></td>
 											<td class="form-group">
-												<a href="/" class="btn btn-primary"><i class="glyphicon glyphicon-pencil"></i></a>
-												<a href="/" class="btn btn-danger"><i class="glyphicon glyphicon-remove"></i></a>
+												<a href="/admin/categories/edit/<%= category._id %>" class="btn btn-primary"><i class="glyphicon glyphicon-pencil"></i></a>
+												<a href="/admin/categories/delete/<%= category._id %>" class="btn btn-danger"><i class="glyphicon glyphicon-remove"></i></a>
 											</td>
 										</tr>
-										<tr>
-											<td style="">2</td>
-											<td style="">Danh mục 2</td>
-											<td class="form-group">
-												<a href="/" class="btn btn-primary"><i class="glyphicon glyphicon-pencil"></i></a>
-												<a href="/" class="btn btn-danger"><i class="glyphicon glyphicon-remove"></i></a>
-											</td>
-										</tr>
+										<% } %>
 									</tbody>
 								</table>
 							</div>
 							<div class="panel-footer">
 								<nav aria-label="Page navigation example">
 									<ul class="pagination">
-										<li class="page-item"><a class="page-link" href="#">&laquo;</a></li>
-										<li class="page-item"><a class="page-link" href="#">1</a></li>
-										<li class="page-item"><a class="page-link" href="#">2</a></li>
-										<li class="page-item"><a class="page-link" href="#">3</a></li>
-										<li class="page-item"><a class="page-link" href="#">&raquo;</a></li>
+										<% if(hasPrev) {%>
+											<li class="page-item"><a class="page-link" href="/admin/categories?page=<%= prev %>">&laquo;</a></li>
+										<% } %>
+										<% for(let i of pages) {%>
+										<li class="page-item <%= i==page ? 'active' : '' %>">
+											<% if(i=="...") {%>
+											<span class="page-link"><%= i %></span>
+											<% }else {%>
+											<a class="page-link" href="/admin/categories?page=<%= i %>"><%= i %></a>
+											<% } %>
+										</li>
+										<% } %>
+										<% if(hasNext) {%>
+										<li class="page-item"><a class="page-link" href="/admin/categories?page=<%= next %>">&raquo;</a></li>
+										<% } %>
 									</ul>
 								</nav>
 							</div>

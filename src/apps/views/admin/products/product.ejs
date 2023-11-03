@@ -5,7 +5,7 @@
 <div class="col-sm-9 col-sm-offset-3 col-lg-10 col-lg-offset-2 main">			
 		<div class="row">
 			<ol class="breadcrumb">
-				<li><a href="#"><svg class="glyph stroked home"><use xlink:href="#stroked-home"></use></svg></a></li>
+				<li><a href="/admin/dashboard"><svg class="glyph stroked home"><use xlink:href="#stroked-home"></use></svg></a></li>
 				<li class="active">Danh sách sản phẩm</li>
 			</ol>
 		</div><!--/.row-->
@@ -16,7 +16,7 @@
 			</div>
 		</div><!--/.row-->
 		<div id="toolbar" class="btn-group">
-            <a href="/admin/product/create" class="btn btn-success">
+            <a href="/admin/products/create" class="btn btn-success">
                 <i class="glyphicon glyphicon-plus"></i> Thêm sản phẩm
             </a>
         </div>
@@ -51,8 +51,8 @@
                                         </span></td>
                                         <td><%= product.cat_id.title %></td>
                                         <td class="form-group">
-                                            <a href="/admin/product/edit/5" class="btn btn-primary"><i class="glyphicon glyphicon-pencil"></i></a>
-                                            <a href="/admin/product/delete/5" class="btn btn-danger"><i class="glyphicon glyphicon-remove"></i></a>
+                                            <a href="/admin/products/edit/<%= product._id %>" class="btn btn-primary"><i class="glyphicon glyphicon-pencil"></i></a>
+                                            <a href="/admin/products/delete/<%= product._id %>" class="btn btn-danger"><i class="glyphicon glyphicon-remove"></i></a>
                                         </td>
                                     </tr>
                                         <%} %>
@@ -61,7 +61,23 @@
                     </div>
                     <div class="panel-footer">
                         <nav aria-label="Page navigation example">
-                            <%- include("../layout/pagination") %>
+                            <ul class="pagination">
+                                <% if(hasPrev) {%>
+                                    <li class="page-item"><a class="page-link" href="/admin/products?page=<%= prev %>">&laquo;</a></li>
+                                <% } %>
+                                <% for(let i of pages) {%>
+                                <li class="page-item <%= i==page ? 'active' : '' %>">
+                                    <% if(i=="...") {%>
+                                    <span class="page-link"><%= i %></span>
+                                    <% }else {%>
+                                    <a class="page-link" href="/admin/products?page=<%= i %>"><%= i %></a>
+                                    <% } %>
+                                </li>
+                                <% } %>
+                                <% if(hasNext) {%>
+                                <li class="page-item"><a class="page-link" href="/admin/products?page=<%= next %>">&raquo;</a></li>
+                                <% } %>
+                            </ul>
                         </nav>
                     </div>
 				</div>

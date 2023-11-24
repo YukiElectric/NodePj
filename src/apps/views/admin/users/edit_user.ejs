@@ -28,7 +28,7 @@
                                         <% if(error == "all-error") {%>Email đã tồn tại, Mật khẩu không khớp !<% } %>
                                     </div>                                   
                                 <% } %>
-                            <form role="form" method="post" action="/admin/users/store?id=<%= user._id %>">
+                            <form role="form" method="post" action="/admin/users/update/<%= user._id %>">
                                 <div class="form-group">
                                     <label>Họ & Tên</label>
                                     <input type="text" name="full_name" required class="form-control" value="<%= user.full_name %>" placeholder="">

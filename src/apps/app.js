@@ -12,7 +12,7 @@ app.set("view engine", config.get("app.view_engine"));
 
 app.use(express.urlencoded({extended: true}));
 app.use("/static", express.static(config.get("app.static_folder")));
-
+app.use(require("./middlewares/share"));
 
 app.set("trust proxy", 1);
 app.use(session({

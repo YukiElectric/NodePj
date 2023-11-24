@@ -21,8 +21,10 @@ const create = (req, res) => {
     res.render("./admin/categories/add_category",{status : true});
 }
 
-const edit = (req, res) => {
-    res.render("./admin/categories/edit_category");
+const edit = async (req, res) => {
+    const id = req.params.id;
+    const category = await CategoryModel.findById(id);
+    res.render("./admin/categories/edit_category",{category , error : false});
 }
 
 const del = async (req, res) => {
@@ -46,10 +48,28 @@ const store = async (req, res) => {
     }
 }
 
+const update = async (req, res) => {
+    const id = req.params.id;
+    const title = req.body.title;
+    const category = {
+        _id : id,
+        title,
+        slug : slug(title)
+    }
+    const existingCategory = await CategoryModel.find({$or : [{title}, {slug : title}]});
+    if(existingCategory.length!=0) {
+        res.render("./admin/categories/edit_category",{category , error : true});
+    }else{
+        await CategoryModel.findByIdAndUpdate(id, category);
+        res.redirect("/admin/categories");
+    }
+}
+
 module.exports = {
     index,
     create,
     edit,
     del,
-    store
+    store,
+    update
 }

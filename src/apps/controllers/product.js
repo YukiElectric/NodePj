@@ -41,12 +41,13 @@ const edit = async (req, res) => {
 
 const del = async (req, res) => {
     const id = req.params.id;
+    const data = await ProductModel.findById(id);
+    fs.unlink("src/public/images/"+data.thumbnail,()=>{});
     await ProductModel.findByIdAndDelete(id);
     res.redirect("/admin/products");
 }
 
 const store = async (req, res) => {
-    const {id} = req.query;
     const { file, body } = req;
     const product = {
         name: body.name,
@@ -65,15 +66,36 @@ const store = async (req, res) => {
         const thumbnail = "products/" + file.originalname;
         fs.renameSync(file.path, path.resolve("src/public/images/", thumbnail));
         product["thumbnail"] = thumbnail;
-        if (!id) {
-            await new ProductModel(product).save();
-            res.redirect("/admin/products");
-        }
-    }
-    if(id) {
-        await ProductModel.findByIdAndUpdate(id, product);
+        await new ProductModel(product).save();
         res.redirect("/admin/products");
     }
+}
+
+const update = async (req, res) => {
+    const id = req.params.id;
+    const { file, body } = req;
+    const product = {
+        name: body.name,
+        slug: slug(body.name),
+        price: body.price,
+        warranty: body.warranty,
+        accessories: body.accessories,
+        promotion: body.promotion,
+        status: body.status,
+        cat_id: body.cat_id,
+        is_stock: body.is_stock,
+        featured: body.featured == "check",
+        description: body.description,
+    }
+    if (file) {
+        const data = await ProductModel.findById(id);
+        fs.unlink("src/public/images/"+data.thumbnail,()=>{});
+        const thumbnail = "products/" + file.originalname;
+        fs.renameSync(file.path, path.resolve("src/public/images/", thumbnail));
+        product["thumbnail"] = thumbnail;
+    }
+    await ProductModel.findByIdAndUpdate(id,product);
+    res.redirect("/admin/products");
 }
 
 module.exports = {
@@ -81,5 +103,6 @@ module.exports = {
     create,
     edit,
     del,
-    store
+    store,
+    update
 }

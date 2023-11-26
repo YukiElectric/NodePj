@@ -1,6 +1,7 @@
 const ProductModel = require("../models/product");
 const CategoryModel = require("../models/category");
 const pagination = require("../../common/pagination");
+const pipe = require("../../common/pipe");
 const slug = require("slug");
 const fs = require("fs");
 const path = require("path");
@@ -11,10 +12,7 @@ const index = async (req, res) => {
     const skip = limit * (page - 1);
     const data = await ProductModel.find({}).sort({ _id: -1 }).limit(limit).skip(skip).populate({ path: "cat_id" });
     const products = data.map((item) => {
-        item.price = (Math.ceil(eval(item.price) / 1000) * 1000).toLocaleString('vi-VN', {
-            style: 'currency',
-            currency: 'VND'
-        });
+        item.price = pipe(item.price);
         return item;
     })
     const totalRows = await ProductModel.find().countDocuments();

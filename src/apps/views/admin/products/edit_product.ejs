@@ -21,7 +21,7 @@
                     <div class="panel panel-default">
                         <div class="panel-body">
                             <div class="col-md-6">
-                                <form role="form" method="post" enctype="multipart/form-data" action="/admin/products/store?id=<%= product._id %>">
+                                <form role="form" method="post" enctype="multipart/form-data" action="/admin/products/update/<%= product._id %>">
                                 <div class="form-group">
                                     <label>Tên sản phẩm</label>
                                     <input type="text" name="name" required class="form-control" value="<%= product.name %>"  placeholder="">
@@ -62,7 +62,7 @@
                                     <label>Danh mục</label>
                                     <select name="cat_id" class="form-control">
                                         <% for(let category of categories) {%>
-                                            <option <% if(category._id == product.cat_id.toString()) {%>selected<%}%>
+                                            <option <%= category.id == product.cat_id && "selected" %>
                                             value=<%= category._id %>><%= category.title %></option>
                                         <% } %>
                                     </select>
@@ -71,8 +71,8 @@
                                 <div class="form-group">
                                     <label>Trạng thái</label>
                                     <select name="is_stock" class="form-control">
-                                        <option <% if(product.is_stock){%>selected<%}%> value=1>Còn hàng</option>
-                                        <option <% if(!product.is_stock){%>selected<%}%> value=0>Hết hàng</option>
+                                        <option <%= product.is_stock && "selected" %> value=1>Còn hàng</option>
+                                        <option <%= !product.is_stock && "selected" %> value=0>Hết hàng</option>
                                     </select>
                                 </div>
                                 
@@ -80,13 +80,16 @@
                                     <label>Sản phẩm nổi bật</label>
                                     <div class="checkbox">
                                         <label>
-                                            <input name="featured" type="checkbox" <% if(product.featured){%>checked<%}%> value="check">Nổi bật
+                                            <input name="featured" type="checkbox" <%= product.featured && "checked" %> value="check">Nổi bật
                                         </label>
                                     </div>
                                 </div>
                                 <div class="form-group">
                                         <label>Mô tả sản phẩm</label>
-                                        <textarea name="description" required class="form-control" rows="3"><%= product.description %></textarea>
+                                        <textarea id="description" name="description" required class="form-control" rows="3"><%= product.description %></textarea>
+                                        <script>
+                                            CKEDITOR.replace("description");
+                                        </script>
                                     </div>
                                 <button type="submit" name="sbm" class="btn btn-primary">Cập nhật</button>
                                 <button type="reset" class="btn btn-default">Làm mới</button>

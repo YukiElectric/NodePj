@@ -13,17 +13,17 @@ const index = async (req, res) => {
     const hasNext = page < totalPages ? true : false;
     const prev = page - 1;
     const hasPrev = page > 1 ? true : false;
-    res.render("./admin/users/user",{users, pages, page, totalPages, next, hasNext, prev, hasPrev});
+    res.render("./admin/users/user", { users, pages, page, totalPages, next, hasNext, prev, hasPrev });
 }
 
 const create = (req, res) => {
-    res.render("./admin/users/add_user", {status: true});
+    res.render("./admin/users/add_user", { status: true });
 }
 
 const edit = async (req, res) => {
     const id = req.params.id;
     const user = await UserModel.findById(id);
-    res.render("./admin/users/edit_user", {user, error : ""});
+    res.render("./admin/users/edit_user", { user, error: "" });
 }
 
 const del = async (req, res) => {
@@ -33,28 +33,29 @@ const del = async (req, res) => {
 }
 
 const store = async (req, res) => {
-    const {id} = req.query;
-    const {full_name, email, password, role, retype_password} = req.body;
-    const existingUser = await UserModel.find({email, _id: {$ne : id}});
-    const user = {full_name, email, password, role};
-    if(existingUser.length!=0) {
-        if(id){
-            if(password!=retype_password) res.render("./admin/users/edit_user", {user, error : "all-error"});
-            else res.render("./admin/users/edit_user", {user, error : "existing-email"});
-        }else {
-            res.render("./admin/users/add_user",{status: false});
-        }
-    }else {
-        if(id){
-            if(password!=retype_password) res.render("./admin/users/edit_user", {user, error : "password-missmatch"});
-            else {
-                await UserModel.findByIdAndUpdate(id,user);
-                res.redirect("/admin/users");
-            }
-        }else {
-            res.redirect("/admin/users");
-            await new UserModel(user).save();
-        }
+    const { full_name, email, password, role, retype_password } = req.body;
+    const existingUser = await UserModel.find({ email });
+    const user = { full_name, email, password, role };
+    if (existingUser.length != 0) {
+        res.render("./admin/users/add_user", { status: false });
+    } else {
+        res.redirect("/admin/users");
+        await new UserModel(user).save();
+    }
+}
+
+const update = async (req, res) => {
+    const id = req.params.id;
+    const { full_name, email, password, role, retype_password } = req.body;
+    const existingUser = await UserModel.find({ email, _id : {$ne : id} });
+    const data = { full_name, email, password, role };
+    const user = {_id : id, full_name, email, password, role}
+    if(password!=retype_password && existingUser.length!=0) res.render("./admin/users/edit_user", { user, error: "all-error" });
+    else if(password!=retype_password) res.render("./admin/users/edit_user", { user, error: "password-missmatch" });
+    else if(existingUser.length!=0) res.render("./admin/users/edit_user", { user, error: "password-missmatch" });
+    else {
+        await UserModel.findByIdAndUpdate(id,data);
+        res.redirect("/admin/users");
     }
 }
 
@@ -63,5 +64,6 @@ module.exports = {
     create,
     edit,
     del,
-    store
+    store,
+    update
 }

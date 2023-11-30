@@ -1,4 +1,5 @@
 const UserModel = require("../models/user");
+const bcrypt = require("bcrypt");
 const pagination = require("../../common/pagination");
 
 const index = async (req, res) => {
@@ -17,7 +18,7 @@ const index = async (req, res) => {
 }
 
 const create = (req, res) => {
-    res.render("./admin/users/add_user", { status: true });
+    res.render("./admin/users/add_user", { status: "" });
 }
 
 const edit = async (req, res) => {
@@ -35,12 +36,17 @@ const del = async (req, res) => {
 const store = async (req, res) => {
     const { full_name, email, password, role, retype_password } = req.body;
     const existingUser = await UserModel.find({ email });
-    const user = { full_name, email, password, role };
+    const salt = await bcrypt.genSalt(10);
+    const hashed = await bcrypt.hash(password, salt);
+    const user = { full_name, email, password : hashed , role };
+    if(retype_password!=password){
+        res.render("./admin/users/add_user", { status: "password" });
+    }
     if (existingUser.length != 0) {
-        res.render("./admin/users/add_user", { status: false });
+        res.render("./admin/users/add_user", { status: "existing" });
     } else {
-        res.redirect("/admin/users");
         await new UserModel(user).save();
+        res.redirect("/admin/users");
     }
 }
 
@@ -48,7 +54,9 @@ const update = async (req, res) => {
     const id = req.params.id;
     const { full_name, email, password, role, retype_password } = req.body;
     const existingUser = await UserModel.find({ email, _id : {$ne : id} });
-    const data = { full_name, email, password, role };
+    const salt = await bcrypt.genSalt(10);
+    const hashed = await bcrypt.hash(password, salt);
+    const data = { full_name, email, password : hashed, role };
     const user = {_id : id, full_name, email, password, role}
     if(password!=retype_password && existingUser.length!=0) res.render("./admin/users/edit_user", { user, error: "all-error" });
     else if(password!=retype_password) res.render("./admin/users/edit_user", { user, error: "password-missmatch" });

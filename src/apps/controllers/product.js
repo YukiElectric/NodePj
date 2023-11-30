@@ -10,8 +10,8 @@ const index = async (req, res) => {
     const limit = 10;
     const page = parseInt(req.query.page) || 1;
     const skip = limit * (page - 1);
-    const data = await ProductModel.find({}).sort({ _id: -1 }).limit(limit).skip(skip).populate({ path: "cat_id" });
-    const products = data.map((item) => {
+    const products = await ProductModel.find({}).sort({ _id: -1 }).limit(limit).skip(skip).populate({ path: "cat_id" });
+    products.map((item) => {
         item.price = pipe(item.price);
         return item;
     })

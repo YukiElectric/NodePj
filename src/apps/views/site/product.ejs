@@ -20,11 +20,23 @@
                                 <li id="price-number"><%= product.price %></li>
                                 <% if(product.is_stock) {%>
                                 <li id="status">Còn hàng</li>
+                                <form method="post" action="/add-to-cart">
+                                    <input type="hidden" name="id" value="<%=product.id%>">
+                                    <div class="form-row align-items-center">
+                                        <div class="col-sm-3 my-1">
+                                            <div class="input-group">
+                                                <input type="number" class="form-control" min="1" value="1" name="qty" id="quantity" placeholder="Số lượng">
+                                            </div>
+                                        </div>
+                                        <div class="col-auto my-1">
+                                            <button type="submit"  class="btn btn-primary">Thêm vào giỏ hàng</button>
+                                        </div>
+                                    </div>
+                                </form>
                                 <% }else{ %>
                                 <li id="status" class="text-danger">Hết hàng</li>
-                                <% } %>
+                                <% } %>                                   
                             </ul>
-                            <div id="add-cart"><a href="#">Mua ngay</a></div>
                         </div>
                     </div>
                     <div id="product-body" class="row">
@@ -78,25 +90,8 @@
                     <!--	End Comments List	-->
                 </div>
                 <!--	End Product	--> 
-                <div id="pagination">
-                    <ul class="pagination">
-                        <% if(hasPrev) {%>
-                            <li class="page-item"><a class="page-link" href="/product-<%= product.slug %>.<%= product._id %>?page=<%= prev %>">&laquo;</a></li>
-                        <% } %>
-                        <% for(let i of pages) {%>
-                        <li class="page-item <%= i==page ? 'active' : '' %>">
-                            <% if(i=="...") {%>
-                            <span class="page-link"><%= i %></span>
-                            <% }else {%>
-                            <a class="page-link" href="/product-<%= product.slug %>.<%= product._id %>?page=<%= i %>"><%= i %></a>
-                            <% } %>
-                        </li>
-                        <% } %>
-                        <% if(hasNext) {%>
-                        <li class="page-item"><a class="page-link" href="/product-<%= product.slug %>.<%= product._id %>?page=<%= next %>">&raquo;</a></li>
-                        <% } %>
-                    </ul>
-                </div>               
+                <% let path = "/product-"+product.slug+"."+product._id+"?" %>
+                <%- include("./components/pagination",{path}) %>               
             </div>
             
 <%- include("./layout/slidebar") %>

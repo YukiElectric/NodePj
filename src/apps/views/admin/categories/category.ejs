@@ -38,8 +38,8 @@
 									<tbody>
 										<% let i=0; for(let category of categories) {%>
 										<tr>
-											<td style=""><%= ++i %></td>
-											<td style=""><%= category.title %></td>
+											<td><%= ++i %></td>
+											<td><%= category.title %></td>
 											<td class="form-group">
 												<a href="/admin/categories/edit/<%= category._id %>" class="btn btn-primary"><i class="glyphicon glyphicon-pencil"></i></a>
 												<a href="/admin/categories/delete/<%= category._id %>" class="btn btn-danger"><i class="glyphicon glyphicon-remove"></i></a>
@@ -49,27 +49,8 @@
 									</tbody>
 								</table>
 							</div>
-							<div class="panel-footer">
-								<nav aria-label="Page navigation example">
-									<ul class="pagination">
-										<% if(hasPrev) {%>
-											<li class="page-item"><a class="page-link" href="/admin/categories?page=<%= prev %>">&laquo;</a></li>
-										<% } %>
-										<% for(let i of pages) {%>
-										<li class="page-item <%= i==page ? 'active' : '' %>">
-											<% if(i=="...") {%>
-											<span class="page-link"><%= i %></span>
-											<% }else {%>
-											<a class="page-link" href="/admin/categories?page=<%= i %>"><%= i %></a>
-											<% } %>
-										</li>
-										<% } %>
-										<% if(hasNext) {%>
-										<li class="page-item"><a class="page-link" href="/admin/categories?page=<%= next %>">&raquo;</a></li>
-										<% } %>
-									</ul>
-								</nav>
-							</div>
+							<% let path = "/admin/categories" %>
+							<%- include("../layout/pagination",{path}) %>
 						</div>
 			</div>
 		</div><!--/.row-->

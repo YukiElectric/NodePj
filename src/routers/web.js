@@ -20,7 +20,11 @@ const siteController = require("../apps/controllers/site");
 
 router.get("/admin/login", checkLogin ,authController.getLogin);
 
-router.post("/admin/login",checkLogin, authController.postLogin)
+router.post("/admin/login",checkLogin, authController.postLogin);
+
+router.get("/admin/register", authController.getRegister);
+
+router.post("/admin/register", authController.postRegister);
 
 router.get("/admin/logout" ,checkAdmin, authController.logout);
 
@@ -75,5 +79,7 @@ router.get("/search", siteController.search);
 router.get("/cart", siteController.cart);
 
 router.get("/success", siteController.success);
+
+router.post("/add-to-cart", siteController.addToCart);
 
 module.exports = router;

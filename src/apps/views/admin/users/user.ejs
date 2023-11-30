@@ -40,9 +40,9 @@
                             <tbody>
                                 <% let i=0; for(let user of users) {%>
                                 <tr>
-                                    <td style=""><%= ++i %></td>
-                                    <td style=""><%= user.full_name %></td>
-                                    <td style=""><%= user.email %></td>
+                                    <td><%= ++i %></td>
+                                    <td><%= user.full_name %></td>
+                                    <td><%= user.email %></td>
                                     <td><span class="label label-<%= user.role=='admin' ? 'danger' : 'warning' %>"><%= user.role %></span></td>
                                     <td class="form-group">
                                         <a href="/admin/users/edit/<%= user._id %>" class="btn btn-primary"><i class="glyphicon glyphicon-pencil"></i></a>
@@ -53,27 +53,8 @@
                             </tbody>
 						</table>
                     </div>
-                    <div class="panel-footer">
-                        <nav aria-label="Page navigation example">
-                            <ul class="pagination">
-                                <% if(hasPrev) {%>
-                                    <li class="page-item"><a class="page-link" href="/admin/users?page=<%= prev %>">&laquo;</a></li>
-                                <% } %>
-                                <% for(let i of pages) {%>
-                                <li class="page-item <%= i==page ? 'active' : '' %>">
-                                    <% if(i=="...") {%>
-                                    <span class="page-link"><%= i %></span>
-                                    <% }else {%>
-                                    <a class="page-link" href="/admin/users?page=<%= i %>"><%= i %></a>
-                                    <% } %>
-                                </li>
-                                <% } %>
-                                <% if(hasNext) {%>
-                                <li class="page-item"><a class="page-link" href="/admin/users?page=<%= next %>">&raquo;</a></li>
-                                <% } %>
-                            </ul>
-                        </nav>
-                    </div>
+                    <% let path = "/admin/users" %>
+                    <%- include("../layout/pagination",{path}) %>
 				</div>
 			</div>
 		</div><!--/.row-->	

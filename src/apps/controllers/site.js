@@ -6,13 +6,13 @@ const CommentModel = require("../models/comment");
 const ProductModel = require("../models/product");
 
 const home = async (req, res)=>{
-    const featuredData = await ProductModel.find({featured : true, is_stock : true}).sort({_id : -1}).limit(6);
-    const latestData = await ProductModel.find({featured : true}).sort({_id : -1}).limit(6);
-    const featured = featuredData.map((item) => {
+    const featured = await ProductModel.find({featured : true, is_stock : true}).sort({_id : -1}).limit(6);
+    const latest = await ProductModel.find({featured : true}).sort({_id : -1}).limit(6);
+    featured.map((item) => {
         item.price = pipe(item.price);
         return item;
     });
-    const latest = latestData.map((item) => {
+    latest.map((item) => {
         item.price = pipe(item.price);
         return item;
     })
@@ -23,11 +23,11 @@ const category = async (req, res)=>{
     const id = req.params.id;
     const page = parseInt(req.query.page) || 1;
     const skip = limit * (page - 1);
-    const data = await ProductModel.find({cat_id : id}).limit(limit).skip(skip);
-    const products = data.map((item) => {
+    const products = await ProductModel.find({cat_id : id}).limit(limit).skip(skip);
+    products.map((item) => {
         item.price = pipe(item.price);
         return item;
-    })
+    });
     const category = await CategoryModel.findById(id);
     const totalRows = await ProductModel.find({cat_id : id}).countDocuments();
     const totalPages = Math.ceil(totalRows / limit);
@@ -45,11 +45,11 @@ const product = async (req, res)=>{
     const skip = limit * (page - 1);
     const product = await ProductModel.findById(id);
     product.price = pipe(product.price);
-    const data = await CommentModel.find({prd_id : id}).sort({_id : -1}).limit(limit).skip(skip);
-    const comments = data.map((item) => {
+    const products = await CommentModel.find({prd_id : id}).sort({_id : -1}).limit(limit).skip(skip);
+    const comments = products.map((item) => {
         item = {item, time : moment(new Date(item.updatedAt)).fromNow()};
         return item;
-    })
+    });
     const totalRows = await CommentModel.find({prd_id : id}).countDocuments();
     const totalPages = Math.ceil(totalRows / limit);
     const pages = pagination(page, totalPages);
@@ -89,11 +89,37 @@ const search = async (req, res)=>{
     const hasPrev = page > 1 ? true : false
     res.render("./site/search",{search, keyword, pages, page, totalPages, next, hasNext, prev, hasPrev});
 }
-const cart = (req, res)=>{
-    res.render("./site/cart");
+const cart = async (req, res)=>{
+    const products = req.session.cart;
+    const total = pipe(products.reduce((sum, item) => sum + item.price * item.qty, 0 ));
+    res.render("./site/cart",{products, total, pipe});
 }
 const success = (req, res)=>{
     res.render("./site/success");
+}
+
+const addToCart = async (req, res)=>{
+    const id = req.body.id;
+    const qty = parseInt(req.body.qty);
+    const items = req.session.cart;
+    let isProductExists = false;
+    items.map((item)=>{
+        if(item.id == id) {
+            item.qty += qty;
+            isProductExists = true;
+        }
+    });
+    if(!isProductExists) {
+        const product = await ProductModel.findById(id);
+        items.push({
+            id,
+            name: product.name,
+            price: product.price,
+            thumbnail: product.thumbnail,
+            qty
+        });
+    }
+    res.redirect("/cart");
 }
 
 module.exports = {
@@ -103,5 +129,6 @@ module.exports = {
     search,
     cart,
     success,
-    comment
+    comment,
+    addToCart
 }

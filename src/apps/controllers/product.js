@@ -1,5 +1,6 @@
 const ProductModel = require("../models/product");
 const CategoryModel = require("../models/category");
+const CommentModel = require("../models/comment");
 const pagination = require("../../common/pagination");
 const pipe = require("../../common/pipe");
 const slug = require("slug");
@@ -42,6 +43,7 @@ const del = async (req, res) => {
     const data = await ProductModel.findById(id);
     fs.unlink("src/public/images/"+data.thumbnail,()=>{});
     await ProductModel.findByIdAndDelete(id);
+    await CommentModel.deleteMany({prd_id : id});
     res.redirect("/admin/products");
 }
 

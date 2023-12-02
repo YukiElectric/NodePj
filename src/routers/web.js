@@ -18,6 +18,8 @@ const uploadMiddleware = require("../apps/middlewares/upload");
 
 const siteController = require("../apps/controllers/site");
 
+const commentController = require("../apps/controllers/comment");
+
 router.get("/admin/login", checkLogin ,authController.getLogin);
 
 router.post("/admin/login",checkLogin, authController.postLogin);
@@ -81,5 +83,11 @@ router.get("/cart", siteController.cart);
 router.get("/success", siteController.success);
 
 router.post("/add-to-cart", siteController.addToCart);
+
+router.post("/update-cart", siteController.updateCart);
+
+router.get("/delete-cart", siteController.deleteCart);
+
+router.get("/admin/comments", commentController.index);
 
 module.exports = router;

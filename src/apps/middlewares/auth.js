@@ -6,12 +6,9 @@ const checkLogin = (req, res, next) => {
 }
 
 const checkAdmin = (req, res, next) => {
-    if(!req.session.token) {
+    if(!req.session.token || !req.session.role) {
         return res.redirect("/admin/login");
     }
-    // if(!req.session.role) {
-    //     return res.redirect("/");
-    // }
     next();
 }
 

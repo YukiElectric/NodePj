@@ -122,6 +122,25 @@ const addToCart = async (req, res)=>{
     res.redirect("/cart");
 }
 
+
+const updateCart = (req, res) => {
+    const product = req.body.product;
+    let cart = req.session.cart;
+    cart.map((item)=>{
+        item.qty = parseInt(product[item.id]["qty"]);
+        return item
+    });
+    res.redirect("/cart");
+}
+
+const deleteCart = (req, res) => {
+    const id = req.query.id;
+    let cart = req.session.cart;
+    const newCart = cart.filter((item) => item.id != id);
+    req.session.cart = newCart;
+    res.redirect("/cart");
+}
+
 module.exports = {
     home,
     category,
@@ -130,5 +149,7 @@ module.exports = {
     cart,
     success,
     comment,
-    addToCart
+    addToCart,
+    updateCart,
+    deleteCart
 }

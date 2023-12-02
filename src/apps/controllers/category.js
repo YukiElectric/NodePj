@@ -1,6 +1,7 @@
 const CategoryModel = require("../models/category");
 const pagination = require("../../common/pagination");
-const slug = require("slug")
+const slug = require("slug");
+const ProductModel = require("../models/product");
 
 const index = async (req, res) => {
     const limit = 30;
@@ -30,6 +31,7 @@ const edit = async (req, res) => {
 const del = async (req, res) => {
     const id = req.params.id;
     await CategoryModel.deleteOne({_id : id});
+    await ProductModel.deleteMany({cat_id : id});
     res.redirect("/admin/categories");
 }
 

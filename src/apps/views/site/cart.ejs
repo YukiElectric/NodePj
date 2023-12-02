@@ -10,7 +10,7 @@
                         <div class="cart-nav-item col-lg-2 col-md-2 col-sm-12">Tùy chọn</div> 
                         <div class="cart-nav-item col-lg-3 col-md-3 col-sm-12">Giá</div>    
                     </div>  
-                    <form method="post">
+                    <form method="post" action="/update-cart">
                     <% for(let item of products) {%>
                         <div class="cart-item row">
                             <div class="cart-thumb col-lg-7 col-md-7 col-sm-12">
@@ -19,9 +19,9 @@
                             </div> 
                             
                             <div class="cart-quantity col-lg-2 col-md-2 col-sm-12">
-                                <input type="number" id="quantity" class="form-control form-blue quantity" value="<%= item.qty %>" min="1">
+                                <input name="product[<%= item.id %>][qty]" type="number" id="quantity" class="form-control form-blue quantity" value="<%= item.qty %>" min="1">
                             </div> 
-                            <div class="cart-price col-lg-3 col-md-3 col-sm-12"><b><%= pipe(item.price) %></b><a href="#">Xóa</a></div>    
+                            <div class="cart-price col-lg-3 col-md-3 col-sm-12"><b><%= pipe(item.price*item.qty) %></b><a href="/delete-cart?id=<%= item.id %>">Xóa</a></div>    
                         </div>
                     <% } %>
                     <div class="row">

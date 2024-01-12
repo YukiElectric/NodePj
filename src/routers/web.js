@@ -90,4 +90,6 @@ router.get("/delete-cart", siteController.deleteCart);
 
 router.get("/admin/comments", commentController.index);
 
+router.post("/order", siteController.order);
+
 module.exports = router;

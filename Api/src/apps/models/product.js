@@ -1,8 +1,8 @@
 const mongoose = require("../../common/database")();
-const productSchema = new mongoose.Schema({
+
+const ProductSchema = new mongoose.Schema({
     cat_id:{
         type: mongoose.Types.ObjectId,
-        ref: "Categories",
         required: true
     },
     name:{
@@ -16,31 +16,24 @@ const productSchema = new mongoose.Schema({
     },
     price:{
         type: String,
-        required: true
     },
     warranty:{
         type: String,
-        required: true
     },
     accessories:{
         type: String,
-        required: true
     },
     promotion:{
         type: String,
-        required: true
     },
     description:{
         type: String,
-        required: true
     },
     status:{
         type: String,
-        required: true
     },
     thumbnail:{
         type: String,
-        required: true
     },
     featured:{
         type: Boolean,
@@ -50,8 +43,7 @@ const productSchema = new mongoose.Schema({
         type: Boolean,
         default: true,
     }
-},{timestamps : true});
+}, {timestamps : true});
 
-const ProductModel = mongoose.model("Products",productSchema,"products");
-
+const ProductModel = mongoose.model("Products", ProductSchema, "products");
 module.exports = ProductModel;

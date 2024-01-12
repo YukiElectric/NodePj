@@ -4,6 +4,9 @@ const pipe = require("../../common/pipe");
 const CategoryModel = require("../models/category");
 const CommentModel = require("../models/comment");
 const ProductModel = require("../models/product");
+const ejs = require("ejs");
+const path = require("path");
+const transporter = require("../../common/transporter");
 
 const home = async (req, res)=>{
     const featured = await ProductModel.find({featured : true, is_stock : true}).sort({_id : -1}).limit(6);
@@ -141,6 +144,34 @@ const deleteCart = (req, res) => {
     res.redirect("/cart");
 }
 
+const order = async (req, res) => {
+    const {name, phone, mail, add} = req.body;
+    const items = req.session.cart;
+    const totalPrice = pipe(items.reduce((sum, item) => sum + item.qty*item.price, 0));
+    const viewPath = req.app.get("views");
+    const html = await ejs.renderFile(
+        path.join(viewPath,"site/email-order.ejs"),
+        {
+            name,
+            phone,
+            mail,
+            add,
+            totalPrice,
+            items,
+            pipe
+        }
+    );
+    await transporter.sendMail({
+        to: mail,
+        from: "Node Server",
+        subject: "Xác nhận đơn hàng",
+        html
+    });
+
+    req.session.cart = [];
+    res.redirect("/success");
+}
+
 module.exports = {
     home,
     category,
@@ -151,5 +182,6 @@ module.exports = {
     comment,
     addToCart,
     updateCart,
-    deleteCart
+    deleteCart,
+    order
 }
